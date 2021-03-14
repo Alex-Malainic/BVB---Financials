@@ -2,7 +2,17 @@ import requests
 from bs4 import BeautifulSoup
 import pandas as pd
 
-url = ("ALR", "TLV", "BRD","BVB","TEL","COTE","DIGI","FP","M","SNP","WINE","SNN","SNG","TGN","SFG","TRP")
+
+#getting all company names available from bvb
+
+url_file = "https://bvb.ro/FinancialInstruments/Markets/SharesListForDownload.ashx"
+resp = requests.get(url_file)
+with open('companylist.csv', 'wb') as f:
+    f.write(resp.content)
+compdf = pd.read_csv('companylist.csv', sep = ";")
+url = list((compdf.iloc[:,0]))
+
+#web scraping for data
 df = pd.DataFrame()
 for p in url:
     link = 'https://www.bvb.ro/FinancialInstruments/Details/FinancialInstrumentsDetails.aspx?s=' + p
@@ -25,5 +35,3 @@ for p in url:
 df.index = url
 df.to_csv("Companies.csv")
 
-
-"asdadsdadasdas"
